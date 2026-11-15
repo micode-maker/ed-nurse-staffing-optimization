@@ -1,0 +1,12 @@
+I'm optimizing weekly emergency department (ED) nurse staffing for Health New Zealand | Te Whatu Ora, for a large Auckland ED (~350 presentations per day, busier evenings and weekends, triage mix ATS 1-5). Real roster and patient data is private, so I need realistic synthetic data. I have two decision variables:
+
+1. core_nurses_per_shift: Range from 18 to 29 (integer, step 1). Permanent rostered registered nurses on every 8-hour shift (21 shifts per week = 168 hours per nurse slot).
+2. float_nurses_per_shift: Range from 0 to 9 (integer, step 1). Flexible pool/agency nurses who are moved to whichever ED area is busiest at the start of each shift.
+
+Generate a CSV with all combinations (12 x 10 = 120 rows) showing how budget_remaining_nzd and pct_within_6hrs respond to these variables. Include realistic patterns where:
+
+- Weekly cost (NZD) = 168 hours x (core nurses x $60/hr + float nurses x $90/hr). $60/hr is an average core RN rate including night and weekend penalty rates; $90/hr reflects pool/agency premiums. Add a small random overtime variation of 0-2% to each roster's cost.
+- budget_remaining_nzd = $380,000 weekly ED nursing budget - weekly cost. Higher is better. Values can be negative when a roster is over budget.
+- pct_within_6hrs is the simulated percentage of patients who leave the ED within 6 hours (Health NZ target is 95%). It rises with staffing but with diminishing returns. Float nurses are more effective per nurse than core nurses (about 1.8x for the first few, with clearly diminishing returns as more are added because they still rely on core staff for handover and supervision) because they are deployed to the busiest areas. A roster of about 22 core and 2 float nurses should give roughly 74% (close to the 74.4% national result for the March 2026 quarter), very lean rosters should be in the mid 50s, and the largest rosters should approach but not exceed 95%. Add small simulation noise (about +/-1.5 percentage points) and round to 1 decimal place.
+
+Format: CSV with columns: core_nurses_per_shift, float_nurses_per_shift, budget_remaining_nzd, pct_within_6hrs
